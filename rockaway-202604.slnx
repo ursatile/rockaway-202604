@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/.github/" />
+  <Folder Name="/.github/workflows/">
+    <File Path=".github/workflows/main_rockaway-202604.yml" />
+  </Folder>
   <Project Path="Rockaway.WebApp.Tests/Rockaway.WebApp.Tests.csproj" />
   <Project Path="Rockaway.WebApp/Rockaway.WebApp.csproj" />
 </Solution>
