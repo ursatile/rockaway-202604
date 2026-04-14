@@ -21,4 +21,13 @@ app.MapStaticAssets();
 app.MapRazorPages()
    .WithStaticAssets();
 
+app.MapGet("/hello/{name}", (string name) => new Customer(name, "Aardvark"));
+
+
 app.Run();
+
+
+public class Customer(string firstName, string lastName) {
+	public string FirstName { get; set; } = firstName;
+	public string LastName { get; set; } = lastName;
+}
