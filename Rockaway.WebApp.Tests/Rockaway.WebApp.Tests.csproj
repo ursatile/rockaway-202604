@@ -19,4 +19,8 @@
 		<Using Include="Xunit" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Rockaway.WebApp\Rockaway.WebApp.csproj" />
+	</ItemGroup>
+
 </Project>

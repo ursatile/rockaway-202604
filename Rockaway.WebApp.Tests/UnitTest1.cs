@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
-
 namespace Rockaway.WebApp.Tests;
 
 public class UnitTest1 {
@@ -11,4 +9,5 @@ public class UnitTest1 {
 		using var response = await client.GetAsync("/");
 		response.EnsureSuccessStatusCode();
 	}
+
 }
