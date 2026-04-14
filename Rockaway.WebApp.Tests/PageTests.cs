@@ -1,8 +1,45 @@
 using AngleSharp;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Rockaway.WebApp.Services;
 using Shouldly;
+using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Rockaway.WebApp.Tests;
+
+public class ServiceTests {
+
+	private static ServerStatus CreateTestStatus() {
+		return new ServerStatus() {
+			Assembly = "TEST_ASSEMBLY",
+			Modified = new DateTimeOffset(2021, 2, 3, 4, 5, 6, TimeSpan.Zero).ToString("O"),
+			Hostname = "TEST_HOST",
+			DateTime = new DateTimeOffset(2022, 3, 4, 5, 6, 7, TimeSpan.Zero).ToString("O")
+		};
+	}
+
+	private class TestStatusReporter : IReportServerStatus {
+		public ServerStatus GetStatus() => CreateTestStatus();
+	}
+
+	private static readonly JsonSerializerOptions jsonSerializerOptions
+		= new(JsonSerializerDefaults.Web);
+
+	[Fact]
+	public async Task Status_Reporter_Has_Correct_Build_Time() {
+		await using var factory = new WebApplicationFactory<Program>()
+			.WithWebHostBuilder(builder => builder.ConfigureServices(services =>
+				services.AddSingleton<IReportServerStatus>(new TestStatusReporter())));
+		using var client = factory.CreateClient();
+		var json = await client.GetStringAsync("/status");
+		var status = JsonSerializer.Deserialize<ServerStatus>(json, jsonSerializerOptions);
+		var testStatus = CreateTestStatus();
+		status.ShouldNotBeNull();
+		status.Hostname.ShouldBe(testStatus.Hostname);
+		status.Assembly.ShouldBe(testStatus.Assembly);
+
+	}
+}
 
 public class PageTests {
 

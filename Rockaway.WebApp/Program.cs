@@ -28,8 +28,3 @@ app.MapGet("/status", (IReportServerStatus reporter)
 	=> reporter.GetStatus());
 
 app.Run();
-
-public class Customer(string firstName, string lastName) {
-	public string FirstName { get; set; } = firstName;
-	public string LastName { get; set; } = lastName;
-}
