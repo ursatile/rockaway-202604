@@ -1,7 +1,10 @@
+using Rockaway.WebApp.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSingleton<IReportServerStatus>(new StatusReporter());
 
 var app = builder.Build();
 
@@ -21,11 +24,10 @@ app.MapStaticAssets();
 app.MapRazorPages()
    .WithStaticAssets();
 
-app.MapGet("/hello/{name}", (string name) => new Customer(name, "Aardvark"));
-
+app.MapGet("/status", (IReportServerStatus reporter)
+	=> reporter.GetStatus());
 
 app.Run();
-
 
 public class Customer(string firstName, string lastName) {
 	public string FirstName { get; set; } = firstName;
