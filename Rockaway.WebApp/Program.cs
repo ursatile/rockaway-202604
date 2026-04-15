@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
@@ -5,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Rockaway.WebApp.Data;
 using Rockaway.WebApp.Hosting;
 using Rockaway.WebApp.Services;
-using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,11 +45,11 @@ using (var scope = app.Services.CreateScope()) {
 	}
 }
 
-if (! app.Environment.ShowDetailedErrors()) app.UseExceptionHandler("/Error");
+if (!app.Environment.ShowDetailedErrors()) app.UseExceptionHandler("/Error");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment()) {
-	
+
 	app.UseHsts();
 }
 

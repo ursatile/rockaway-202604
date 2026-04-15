@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Identity;
 
 namespace Rockaway.WebApp.Data.Sample;
+
 public static partial class SampleData {
 	public static class Users {
 		static Users() {
