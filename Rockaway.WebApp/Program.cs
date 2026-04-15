@@ -59,6 +59,12 @@ app.MapStaticAssets();
 app.MapRazorPages()
    .WithStaticAssets();
 
+app.MapAreaControllerRoute(
+	name: "admin",
+	areaName: "Admin",
+	pattern: "Admin/{controller=Home}/{action=Index}/{id?}"
+).RequireAuthorization();
+
 app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
 
 app.MapGet("/status", (IReportServerStatus reporter)
