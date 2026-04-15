@@ -11,9 +11,12 @@ namespace Rockaway.WebApp.Data;
 public class RockawayDbContext(DbContextOptions<RockawayDbContext> options) : DbContext(options) {
 
 	public DbSet<Artist> Artists { get; set; } = null!;
+	public DbSet<Venue> Venues { get; set; } = null!;
+
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder) {
 		base.OnModelCreating(modelBuilder);
-		modelBuilder.Entity<Artist>().HasData(SampleData.Artists.AllArtists); 
+		modelBuilder.Entity<Artist>().HasData(SampleData.Artists.AllArtists);
+		modelBuilder.Entity<Venue>().HasData(SampleData.Venues.AllVenues);
 	}
 }
