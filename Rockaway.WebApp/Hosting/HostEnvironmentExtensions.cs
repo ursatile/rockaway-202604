@@ -7,4 +7,7 @@ public static class HostEnvironmentExtensions {
 
 	public static bool UseSqlite(this IHostEnvironment env)
 		=> sqliteEnvironments.Contains(env.EnvironmentName);
+
+	public static bool ShowDetailedErrors(this IHostEnvironment env)
+		=> env.EnvironmentName is "Development" or "Staging";
 }

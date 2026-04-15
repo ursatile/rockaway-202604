@@ -1,10 +1,10 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Rockaway.WebApp.Data;
 using Rockaway.WebApp.Hosting;
 using Rockaway.WebApp.Services;
-using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,14 +30,22 @@ if (builder.Environment.UseSqlite()) {
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope()) {
-	using (var db = scope.ServiceProvider.GetService<RockawayDbContext>()!) {
+	using var db = scope.ServiceProvider.GetService<RockawayDbContext>()!;
+	if (app.Environment.UseSqlite()) {
 		db.Database.EnsureCreated();
+	} else if (Boolean.TryParse(app.Configuration["apply-migrations"], out var applyMigrations) && applyMigrations) {
+		logger.LogInformation("apply-migrations=true was specified. Applying EF migrations and then exiting.");
+		db.Database.Migrate();
+		logger.LogInformation("EF database migrations applied successfully.");
+		Environment.Exit(0);
 	}
 }
 
+if (! app.Environment.ShowDetailedErrors()) app.UseExceptionHandler("/Error");
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment()) {
-	app.UseExceptionHandler("/Error");
+	
 	app.UseHsts();
 }
 
