@@ -1,8 +1,3 @@
-// Rockaway.WebApp/Data/Entities/Artist.cs
-
-using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
-
 namespace Rockaway.WebApp.Data.Entities;
 
 public class Artist {
@@ -24,4 +19,6 @@ public class Artist {
 		this.Description = description;
 		this.Slug = slug;
 	}
+
+	public List<Show> HeadlineShows { get; set; } = [];
 }

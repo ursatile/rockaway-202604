@@ -1,57 +1,66 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using Rockaway.WebApp.Areas.Admin.Models;
 using Rockaway.WebApp.Data;
 using Rockaway.WebApp.Data.Entities;
 
 namespace Rockaway.WebApp.Areas.Admin.Controllers {
-
-	[Area("admin")]
+	[Area("Admin")]
 	public class VenuesController(RockawayDbContext context) : Controller {
-		// GET: Venues
+
+
 		public async Task<IActionResult> Index()
 			=> View(await context.Venues.ToListAsync());
 
-		// GET: Venues/Details/5
 		public async Task<IActionResult> Details(Guid? id) {
-			if (id == null) {
-				return NotFound();
-			}
-
-			var venue = await context.Venues
-				.FirstOrDefaultAsync(m => m.Id == id);
-			if (venue == null) {
-				return NotFound();
-			}
-
-			return View(venue);
+			if (id == null) return NotFound();
+			var venue = await context.FindVenueWithShowsAndArtistsAsync(id.Value);
+			if (venue == null) return NotFound();
+			var model = new VenueViewModel(venue);
+			return View(model);
 		}
 
-		// GET: Venues/Create
-		public IActionResult Create() {
-			return View();
+		[HttpGet]
+		public async Task<IActionResult> AddShow(string id) {
+			var venue = await context.FindVenueWithShowsAndArtistsAsync(id);
+			if (venue == null) return NotFound();
+			var show = venue.CreateShow();
+			var model = new ShowPostModel(show);
+			return View(model);
 		}
 
-		// POST: Venues/Create
+		[HttpPost]
+		public async Task<IActionResult> AddShow(string venueSlug, ShowPostModel post) {
+			if (!ModelState.IsValid) return View(post);
+			var venue = await context.FindVenueWithShowsAndArtistsAsync(venueSlug);
+			if (venue == null) return NotFound();
+			var headlineArtist = await context.Artists.FindAsync(post.HeadlineArtistId);
+			var date = LocalDate.FromDateTime(post.Date);
+			var show = venue.BookShow(headlineArtist, date);
+			context.Add(show);
+			await context.SaveChangesAsync();
+			return RedirectToAction(nameof(Details), new { id = venue.Id });
+		}
+
+		public IActionResult Create() => View();
+
+		// POST: Admin/Venues/Create
 		// To protect from overposting attacks, enable the specific properties you want to bind to.
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("Id,Name,Slug,Address,City,CountryCode,PostalCode,Telephone,WebsiteUrl")] Venue venue) {
-			if (ModelState.IsValid) {
-				venue.Id = Guid.NewGuid();
-				context.Add(venue);
-				await context.SaveChangesAsync();
-				return RedirectToAction(nameof(Index));
+		public async Task<IActionResult> Create([Bind("Id,Name,Slug,Address,City,CultureName,PostalCode,Telephone,WebsiteUrl")] Venue venue) {
+			if (Country.FromCode(venue.CountryCode) == null) {
+				ModelState.AddModelError("CultureName", $"Sorry, we couldn't match '{venue.CultureName}' with a country in our database.");
 			}
-			return View(venue);
+
+			if (!ModelState.IsValid) return View(venue);
+
+			venue.Id = Guid.NewGuid();
+			context.Add(venue);
+			await context.SaveChangesAsync();
+			return RedirectToAction(nameof(Index));
 		}
 
-		// GET: Venues/Edit/5
+		// GET: Admin/Venues/Edit/5
 		public async Task<IActionResult> Edit(Guid? id) {
 			if (id == null) {
 				return NotFound();
@@ -64,14 +73,19 @@ namespace Rockaway.WebApp.Areas.Admin.Controllers {
 			return View(venue);
 		}
 
-		// POST: Venues/Edit/5
+		// POST: Admin/Venues/Edit/5
 		// To protect from overposting attacks, enable the specific properties you want to bind to.
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Slug,Address,City,CountryCode,PostalCode,Telephone,WebsiteUrl")] Venue venue) {
+		public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Slug,Address,City,CultureName,PostalCode,Telephone,WebsiteUrl")] Venue venue) {
+
 			if (id != venue.Id) {
 				return NotFound();
+			}
+
+			if (Country.FromCode(venue.CountryCode) == null) {
+				ModelState.AddModelError("CultureName", $"Sorry, we couldn't match '{venue.CultureName}' with a country in our database.");
 			}
 
 			if (ModelState.IsValid) {
@@ -91,7 +105,7 @@ namespace Rockaway.WebApp.Areas.Admin.Controllers {
 			return View(venue);
 		}
 
-		// GET: Venues/Delete/5
+		// GET: Admin/Venues/Delete/5
 		public async Task<IActionResult> Delete(Guid? id) {
 			if (id == null) {
 				return NotFound();
@@ -106,7 +120,7 @@ namespace Rockaway.WebApp.Areas.Admin.Controllers {
 			return View(venue);
 		}
 
-		// POST: Venues/Delete/5
+		// POST: Admin/Venues/Delete/5
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeleteConfirmed(Guid id) {

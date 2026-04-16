@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/Rockaway.WebApp.styles.css" asp-append-version="true" />
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 	<style>
 		body { overflow-y: scroll; }
 	</style>
@@ -30,6 +31,9 @@
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="Admin" asp-action="Index" asp-controller="Venues">Venues</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="Admin" asp-action="Index" asp-controller="TicketOrders">Orders</a>
+						</li>
 					</ul>
 					<partial name="~/Areas/Admin/Views/Shared/_LoginPartial.cshtml" />
 				</div>
@@ -43,7 +47,7 @@
 	</div>
 	<footer class="border-top footer text-muted">
 		<div class="container">
-			&copy; 2026 - <a href="/">Rockaway</a>
+			&copy; 2024 - <a href="/">Rockaway</a>
 		</div>
 	</footer>
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>

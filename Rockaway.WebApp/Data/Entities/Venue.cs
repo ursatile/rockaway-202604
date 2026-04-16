@@ -1,22 +1,17 @@
-// Rockaway.WebApp/Data/Entities/Venue.cs
-
-using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
-
 namespace Rockaway.WebApp.Data.Entities;
 
 public class Venue {
 
 	public Venue() { }
 
-	public Venue(Guid id, string name, string slug, string address, string city, string countryCode, string? postalCode, string? telephone,
+	public Venue(Guid id, string name, string slug, string address, string city, string cultureName, string? postalCode, string? telephone,
 		string? websiteUrl) {
 		Id = id;
 		Name = name;
 		Slug = slug;
 		Address = address;
 		City = city;
-		CountryCode = countryCode;
+		CultureName = cultureName;
 		PostalCode = postalCode;
 		Telephone = telephone;
 		WebsiteUrl = websiteUrl;
@@ -39,8 +34,10 @@ public class Venue {
 	public string City { get; set; } = String.Empty;
 
 	[Unicode(false)]
-	[MaxLength(2)]
-	public string CountryCode { get; set; } = String.Empty;
+	[MaxLength(16)]
+	public string CultureName { get; set; } = String.Empty;
+
+	public string CountryCode => CultureName.Split("-").Last();
 
 	public string? PostalCode { get; set; }
 
@@ -49,4 +46,32 @@ public class Venue {
 
 	[Url]
 	public string? WebsiteUrl { get; set; }
+
+	public List<Show> Shows { get; set; } = [];
+
+	public Show BookShow(Artist artist, LocalDate date) {
+		var show = new Show {
+			Venue = this,
+			HeadlineArtist = artist,
+			Date = date,
+		};
+		Shows.Add(show);
+		return show;
+	}
+
+	public CultureInfo Culture
+		=> CultureInfo.GetCultures(CultureTypes.SpecificCultures)
+			   .FirstOrDefault(ci => ci.Name == CultureName)
+		   ??
+		   CultureInfo.InvariantCulture;
+
+	public string FormatPrice(decimal price) => price.ToString("C", Culture);
+
+	private IEnumerable<string?> AddressTokens => [Address, City, PostalCode];
+	private IEnumerable<string?> SummaryTokens => [Name, Address, City, PostalCode, Country.GetName(CountryCode)];
+
+	public string FullAddress => String.Join(", ", AddressTokens.Where(s => !String.IsNullOrWhiteSpace(s)));
+	public string Summary => String.Join(", ", SummaryTokens.Where(s => !String.IsNullOrWhiteSpace(s)));
+
+	public Show CreateShow() => new() { Venue = this };
 }

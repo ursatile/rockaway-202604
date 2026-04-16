@@ -8,7 +8,7 @@ $font-family-sans-serif: "PT Sans Narrow", Arial, Helvetica, sans-serif;
 
 $body-color-dark: #ddd;
 $body-bg-dark: #000;
-$primary: #39f;
+$primary: #660099;
 
 // 3. Include remainder of required Bootstrap stylesheets (including any separate color mode stylesheets)
 @import "../lib/bootstrap/scss/variables";
@@ -38,9 +38,14 @@ $primary: #39f;
 
 // 8. Add additional custom code here
 
-html {
-	background: linear-gradient(150deg, color.scale($primary, $lightness: -70%) 0%, color.scale($primary, $lightness: -50%) 50%, color.scale($primary, $lightness: -80%) 100%);
-	background-attachment: fixed;
+@import '../lib/fontawesome/scss/fontawesome.scss';
+@import '../lib/fontawesome/scss/solid.scss';
+@import '../lib/fontawesome/scss/brands.scss';
+
+@mixin smartphone {
+	@media (max-width: 480px) {
+		@content;
+	}
 }
 
 @mixin fancy-panel($panel-color: color.scale($primary, $lightness: -75%)) {
@@ -48,16 +53,58 @@ html {
 	border-radius: 2 * $border-radius;
 	padding: 2 * $border-radius;
 	background-color: $panel-color;
-	border: 1px solid $body-color-dark;
+	border: 1px solid $body-color;
+
+	@include smartphone {
+		border: 0;
+		border-radius: 0;
+		margin: 0 0 $grid-gutter-width/2 0;
+	}
+}
+
+
+html {
+	background: linear-gradient(150deg, color.scale($primary, $lightness: -70%) 0%, color.scale($primary, $lightness: -50%) 50%, color.scale($primary, $lightness: -80%) 100%);
+	background-attachment: fixed;
 }
 
 body {
-	background-color: transparent;
-	max-width: 960px;
-	margin: 0 auto;
+	background: transparent;
 
+	@include smartphone {
+		padding: 0 !important;
+	}
+}
+
+
+body {
 	> header {
 		@include fancy-panel;
+		display: flex;
+		justify-content: space-between;
+
+		label#nav-toggle {
+			display: none;
+
+			@include smartphone {
+				font-size: 200%;
+				display: block;
+				position: absolute;
+				z-index: 2;
+				top: calc($grid-gutter-width/4);
+				right: calc($grid-gutter-width/2);
+			}
+		}
+
+		input#nav-checkbox {
+			height: 0;
+
+			@include smartphone {
+				&:checked ~ nav {
+					height: 300px;
+				}
+			}
+		}
 
 
 		h1 a {
@@ -73,14 +120,33 @@ body {
 				background: $primary;
 				display: inline-block;
 				padding: 4px 16px;
-				color: $body-color;
+				color: $btn-color;
 				font-size: 120%;
 				border-radius: $border-radius;
 				text-decoration: none;
 
 				&:hover {
-					color: $body-color;
+					color: $btn-color;
 					background: color.scale($primary, $lightness: -50%);
+				}
+			}
+
+			@include smartphone {
+				position: absolute;
+				overflow-y: hidden;
+				display: block;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 0;
+				transition: height 0.2s ease;
+
+				a {
+					display: block;
+					width: 100%;
+					padding: 16px;
+					border-radius: 0;
+					border-bottom: 1px solid $body-color-dark;
 				}
 			}
 		}
@@ -92,7 +158,6 @@ body {
 
 	> footer {
 		@include fancy-panel;
-		color: $body-color-dark;
 		font-size: 80%;
 		display: flex;
 		flex-flow: row wrap;
@@ -100,7 +165,7 @@ body {
 
 		nav {
 			a {
-				color: $body-color-dark;
+				color: $btn-color;
 				display: inline-block;
 				border-left: 1px solid #fff;
 				padding: 0 0.5em;
@@ -114,5 +179,136 @@ body {
 				text-decoration: underline;
 			}
 		}
+
+		@include smartphone {
+			margin-bottom: 0;
+			font-size: 125%;
+
+			span, nav {
+				width: 100%;
+				text-align: center;
+				display: block;
+			}
+
+			nav {
+				a {
+					display: block;
+					border: 0;
+				}
+			}
+		}
 	}
 }
+
+
+@mixin flex-grid-column {
+	@include make-col-ready();
+
+	@include media-breakpoint-up(sm) {
+		@include make-col(6);
+	}
+
+	@include media-breakpoint-up(md) {
+		@include make-col(4);
+	}
+
+	@include media-breakpoint-up(lg) {
+		@include make-col(3);
+	}
+
+	@include media-breakpoint-up(xxl) {
+		@include make-col(2);
+	}
+}
+
+.artist-gallery {
+	@include make-row();
+
+	section {
+		@include flex-grid-column;
+		margin-bottom: 16px;
+	}
+}
+
+div.artist-card {
+	border-radius: $border-radius;
+	background-position: center center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 240px;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+
+	&.long-name h4 {
+		font-size: 1.2em;
+	}
+
+	h4 {
+		background-color: rgba(0,0,0,0.8);
+		padding: calc($container-padding-x / 2);
+		margin: 0;
+		border-radius: 0 0 $border-radius $border-radius;
+
+		a {
+			color: #fff;
+			text-decoration: none;
+		}
+	}
+}
+
+div.venue-listing {
+	img.country-flag {
+		float: right;
+	}
+}
+
+form.ticket-picker {
+	hr {
+		margin: 2px 0;
+	}
+
+	a.fas {
+		text-decoration: none;
+		font-size: 200%;
+		display: inline-block;
+	}
+
+	input[type=number] {
+		border: none;
+		background: none;
+		text-align: center;
+		font-weight: bold;
+		width: 2em;
+		appearance: textfield;
+	}
+
+	input[type=number]::-webkit-inner-spin-button,
+	input[type=number]::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	.row div {
+		display: flex;
+		align-items: center;
+	}
+
+	.row :nth-child(1) {
+		justify-content: start;
+	}
+
+	.row :nth-child(2) {
+		justify-content: center;
+	}
+
+	.row :nth-child(3) {
+		justify-content: end;
+	}
+
+	span.price {
+		white-space: nowrap;
+	}
+}
+
+

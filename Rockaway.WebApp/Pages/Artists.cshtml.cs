@@ -1,14 +1,12 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using Rockaway.WebApp.Data;
-using Rockaway.WebApp.Data.Entities;
+using Rockaway.WebApp.Models;
 
-namespace Rockaway.WebApp.Pages {
-	public class ArtistsModel(RockawayDbContext context) : PageModel {
-		public IList<Artist> Artists { get; set; } = null!;
+namespace Rockaway.WebApp.Pages;
 
-		public async Task OnGetAsync() {
-			Artists = await context.Artists.ToListAsync();
-		}
-	}
+public class ArtistsModel(RockawayDbContext db) : PageModel {
+	public IEnumerable<ArtistViewData> Artists = default!;
+
+	public void OnGet() => Artists = db.Artists
+		.Select(a => new ArtistViewData(a))
+		.ToList();
 }
