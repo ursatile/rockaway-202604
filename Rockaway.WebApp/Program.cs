@@ -18,6 +18,10 @@ builder.Services.AddRazorPages(options
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IReportServerStatus>(new StatusReporter());
 
+#if DEBUG && !NCRUNCH
+builder.Services.AddSassCompiler();
+#endif
+
 var logger = CreateAdHocLogger<Program>()!;
 
 logger.LogInformation("Rockaway running in {environment} environment", builder.Environment.EnvironmentName);

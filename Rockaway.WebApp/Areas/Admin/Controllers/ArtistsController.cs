@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,8 @@ namespace Rockaway.WebApp.Areas.Admin.Controllers {
 	[Area("admin")]
 	public class ArtistsController(RockawayDbContext context) : Controller {
 		// GET: Artists
+
+		[AllowAnonymous]
 		public async Task<IActionResult> Index() {
 			return View(await context.Artists.ToListAsync());
 		}
