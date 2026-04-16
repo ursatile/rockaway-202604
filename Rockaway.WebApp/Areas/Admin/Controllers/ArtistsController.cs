@@ -11,16 +11,10 @@ using Rockaway.WebApp.Data.Entities;
 namespace Rockaway.WebApp.Areas.Admin.Controllers {
 
 	[Area("admin")]
-	public class ArtistsController : Controller {
-		private readonly RockawayDbContext _context;
-
-		public ArtistsController(RockawayDbContext context) {
-			_context = context;
-		}
-
+	public class ArtistsController(RockawayDbContext context) : Controller {
 		// GET: Artists
 		public async Task<IActionResult> Index() {
-			return View(await _context.Artists.ToListAsync());
+			return View(await context.Artists.ToListAsync());
 		}
 
 		// GET: Artists/Details/5
@@ -29,7 +23,7 @@ namespace Rockaway.WebApp.Areas.Admin.Controllers {
 				return NotFound();
 			}
 
-			var artist = await _context.Artists
+			var artist = await context.Artists
 				.FirstOrDefaultAsync(m => m.Id == id);
 			if (artist == null) {
 				return NotFound();
@@ -51,8 +45,8 @@ namespace Rockaway.WebApp.Areas.Admin.Controllers {
 		public async Task<IActionResult> Create([Bind("Id,Name,Description,Slug")] Artist artist) {
 			if (ModelState.IsValid) {
 				artist.Id = Guid.NewGuid();
-				_context.Add(artist);
-				await _context.SaveChangesAsync();
+				context.Add(artist);
+				await context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 			}
 			return View(artist);
@@ -64,7 +58,7 @@ namespace Rockaway.WebApp.Areas.Admin.Controllers {
 				return NotFound();
 			}
 
-			var artist = await _context.Artists.FindAsync(id);
+			var artist = await context.Artists.FindAsync(id);
 			if (artist == null) {
 				return NotFound();
 			}
@@ -83,8 +77,8 @@ namespace Rockaway.WebApp.Areas.Admin.Controllers {
 
 			if (ModelState.IsValid) {
 				try {
-					_context.Update(artist);
-					await _context.SaveChangesAsync();
+					context.Update(artist);
+					await context.SaveChangesAsync();
 				} catch (DbUpdateConcurrencyException) {
 					if (!ArtistExists(artist.Id)) {
 						return NotFound();
@@ -103,7 +97,7 @@ namespace Rockaway.WebApp.Areas.Admin.Controllers {
 				return NotFound();
 			}
 
-			var artist = await _context.Artists
+			var artist = await context.Artists
 				.FirstOrDefaultAsync(m => m.Id == id);
 			if (artist == null) {
 				return NotFound();
@@ -116,17 +110,17 @@ namespace Rockaway.WebApp.Areas.Admin.Controllers {
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeleteConfirmed(Guid id) {
-			var artist = await _context.Artists.FindAsync(id);
+			var artist = await context.Artists.FindAsync(id);
 			if (artist != null) {
-				_context.Artists.Remove(artist);
+				context.Artists.Remove(artist);
 			}
 
-			await _context.SaveChangesAsync();
+			await context.SaveChangesAsync();
 			return RedirectToAction(nameof(Index));
 		}
 
 		private bool ArtistExists(Guid id) {
-			return _context.Artists.Any(e => e.Id == id);
+			return context.Artists.Any(e => e.Id == id);
 		}
 	}
 }

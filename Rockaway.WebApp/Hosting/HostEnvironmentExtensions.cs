@@ -5,9 +5,11 @@ namespace Rockaway.WebApp.Hosting;
 public static class HostEnvironmentExtensions {
 	private static readonly string[] sqliteEnvironments = ["UnitTest", Environments.Development];
 
-	public static bool UseSqlite(this IHostEnvironment env)
-		=> sqliteEnvironments.Contains(env.EnvironmentName);
+	extension(IHostEnvironment env) {
+		public bool ShouldUseSqlite
+			=> sqliteEnvironments.Contains(env.EnvironmentName);
 
-	public static bool ShowDetailedErrors(this IHostEnvironment env)
-		=> env.EnvironmentName is "Development" or "Staging";
+		public bool ShouldDisplayDetailedErrors
+			=> env.EnvironmentName is "Development" or "Staging";
+	}
 }

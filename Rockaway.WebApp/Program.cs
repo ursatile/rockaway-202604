@@ -21,7 +21,8 @@ builder.Services.AddSingleton<IReportServerStatus>(new StatusReporter());
 var logger = CreateAdHocLogger<Program>()!;
 
 logger.LogInformation("Rockaway running in {environment} environment", builder.Environment.EnvironmentName);
-if (builder.Environment.UseSqlite()) {
+
+if (builder.Environment.ShouldUseSqlite) {
 	logger.LogInformation("Using Sqlite database");
 	var sqliteConnection = new SqliteConnection("Data Source=:memory:");
 	sqliteConnection.Open();
@@ -39,7 +40,7 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope()) {
 	using var db = scope.ServiceProvider.GetService<RockawayDbContext>()!;
-	if (app.Environment.UseSqlite()) {
+	if (app.Environment.ShouldUseSqlite) {
 		db.Database.EnsureCreated();
 	} else if (Boolean.TryParse(app.Configuration["apply-migrations"], out var applyMigrations) && applyMigrations) {
 		logger.LogInformation("apply-migrations=true was specified. Applying EF migrations and then exiting.");
@@ -49,7 +50,7 @@ using (var scope = app.Services.CreateScope()) {
 	}
 }
 
-if (!app.Environment.ShowDetailedErrors()) app.UseExceptionHandler("/Error");
+if (!app.Environment.ShouldDisplayDetailedErrors) app.UseExceptionHandler("/Error");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment()) {

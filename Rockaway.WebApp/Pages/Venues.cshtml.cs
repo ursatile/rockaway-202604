@@ -9,17 +9,11 @@ using Rockaway.WebApp.Data;
 using Rockaway.WebApp.Data.Entities;
 
 namespace Rockaway.WebApp.Pages {
-	public class VenuesModel : PageModel {
-		private readonly Rockaway.WebApp.Data.RockawayDbContext _context;
-
-		public VenuesModel(Rockaway.WebApp.Data.RockawayDbContext context) {
-			_context = context;
-		}
-
+	public class VenuesModel(Rockaway.WebApp.Data.RockawayDbContext context) : PageModel {
 		public IList<Venue> Venue { get; set; } = default!;
 
 		public async Task OnGetAsync() {
-			Venue = await _context.Venues.ToListAsync();
+			Venue = await context.Venues.ToListAsync();
 		}
 	}
 }
