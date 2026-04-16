@@ -10,7 +10,11 @@ using Rockaway.WebApp.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+//builder.Services.AddRazorPages();
+
+builder.Services.AddRazorPages(options
+	=> options.Conventions.AuthorizeAreaFolder("admin", "/"));
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IReportServerStatus>(new StatusReporter());
 
