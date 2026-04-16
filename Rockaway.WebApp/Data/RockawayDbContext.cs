@@ -31,7 +31,7 @@ public class RockawayDbContext(DbContextOptions<RockawayDbContext> options)
 		modelBuilder.Entity<Artist>().HasData(SampleData.Artists.AllArtists);
 		modelBuilder.Entity<Venue>().HasData(SampleData.Venues.AllVenues);
 
-		modelBuilder.Entity<IdentityUser>().HasData(SampleData.Users.Admin);
+		// modelBuilder.Entity<IdentityUser>().HasData(SampleData.Users.Admin);
 
 	}
 }
