@@ -4,7 +4,7 @@ namespace Rockaway.WebApp.Models;
 
 public class OrderConfirmationPostData {
 
-	public TicketOrderViewData TicketOrder { get; set; } = default!;
+	public TicketOrderViewData? TicketOrder { get; set; } = default!;
 
 	[Required(ErrorMessage = "Please provide your full name")]
 	[MaxLength(100, ErrorMessage = "Sorry - our database can't handle names that long. :( Max 100 characters, please.")]

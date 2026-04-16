@@ -67,9 +67,14 @@ html {
 	background: linear-gradient(150deg, color.scale($primary, $lightness: -70%) 0%, color.scale($primary, $lightness: -50%) 50%, color.scale($primary, $lightness: -80%) 100%);
 	background-attachment: fixed;
 }
+:root {
+	--content-max-width: 960px;
+}
 
 body {
 	background: transparent;
+
+	padding-inline: max(2rem, (100% - var(--content-max-width)) / 2);
 
 	@include smartphone {
 		padding: 0 !important;

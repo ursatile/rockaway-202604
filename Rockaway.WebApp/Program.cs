@@ -17,6 +17,7 @@ builder.Services.AddRazorPages(options
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IReportServerStatus>(new StatusReporter());
+builder.Services.AddSingleton<IClock>(SystemClock.Instance);
 
 #if DEBUG && !NCRUNCH
 builder.Services.AddSassCompiler();
@@ -39,6 +40,8 @@ if (builder.Environment.ShouldUseSqlite) {
 
 builder.Services.AddDefaultIdentity<IdentityUser>()
 	.AddEntityFrameworkStores<RockawayDbContext>();
+
+builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
 var app = builder.Build();
 
