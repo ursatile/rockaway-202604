@@ -1,3 +1,4 @@
+@use "sass:color";
 // 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
 @import "../lib/bootstrap/scss/functions";
 
@@ -36,3 +37,82 @@ $primary: #39f;
 @import "../lib/bootstrap/scss/utilities/api";
 
 // 8. Add additional custom code here
+
+html {
+	background: linear-gradient(150deg, color.scale($primary, $lightness: -70%) 0%, color.scale($primary, $lightness: -50%) 50%, color.scale($primary, $lightness: -80%) 100%);
+	background-attachment: fixed;
+}
+
+@mixin fancy-panel($panel-color: color.scale($primary, $lightness: -75%)) {
+	margin: $grid-gutter-width 0;
+	border-radius: 2 * $border-radius;
+	padding: 2 * $border-radius;
+	background-color: $panel-color;
+	border: 1px solid $body-color-dark;
+}
+
+body {
+	background-color: transparent;
+	max-width: 960px;
+	margin: 0 auto;
+
+	> header {
+		@include fancy-panel;
+
+
+		h1 a {
+			display: block;
+			font-size: 0;
+			height: 38px;
+			width: 200px;
+			background: url(/img/rockaway-logotype.svg) left center no-repeat;
+		}
+
+		nav {
+			a {
+				background: $primary;
+				display: inline-block;
+				padding: 4px 16px;
+				color: $body-color;
+				font-size: 120%;
+				border-radius: $border-radius;
+				text-decoration: none;
+
+				&:hover {
+					color: $body-color;
+					background: color.scale($primary, $lightness: -50%);
+				}
+			}
+		}
+	}
+
+	> main {
+		@include fancy-panel;
+	}
+
+	> footer {
+		@include fancy-panel;
+		color: $body-color-dark;
+		font-size: 80%;
+		display: flex;
+		flex-flow: row wrap;
+		justify-content: space-between;
+
+		nav {
+			a {
+				color: $body-color-dark;
+				display: inline-block;
+				border-left: 1px solid #fff;
+				padding: 0 0.5em;
+			}
+
+			a:first-child {
+				border: none;
+			}
+
+			a:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+}
