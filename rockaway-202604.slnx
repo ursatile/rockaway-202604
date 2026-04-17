@@ -3,6 +3,8 @@
   <Folder Name="/.github/workflows/">
     <File Path=".github/workflows/main_rockaway-202604.yml" />
   </Folder>
+  <Project Path="Rockaway.MailSender/Rockaway.MailSender.csproj" Id="50043722-4af1-45e8-b49d-9f816ba0f586" />
+  <Project Path="Rockaway.Messages/Rockaway.Messages.csproj" Id="da5f6e7e-7890-4539-9a91-6716befc3766" />
   <Project Path="Rockaway.RazorComponents/Rockaway.RazorComponents.csproj" />
   <Project Path="Rockaway.WebApp.Tests/Rockaway.WebApp.Tests.csproj" />
   <Project Path="Rockaway.WebApp/Rockaway.WebApp.csproj" />

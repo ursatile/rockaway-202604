@@ -7,6 +7,7 @@ using Rockaway.WebApp.Hosting;
 using Rockaway.WebApp.Services;
 using Rockaway.WebApp.Services.Mail;
 using System.Net;
+using EasyNetQ;
 using Microsoft.Build.Experimental;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,17 +50,14 @@ builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents()
 	.AddInteractiveWebAssemblyComponents();
 
-builder.Services.AddHostedService<TicketMailerBackgroundService>();
+// builder.Services.AddHostedService<TicketMailerBackgroundService>();
 
 // Add this to Program.cs
 
-builder.Services.AddSingleton<IMailSender, SmtpMailSender>();
-var smtpSettings = new SmtpSettings();
-builder.Configuration.Bind("Smtp", smtpSettings);
-builder.Services.AddSingleton(smtpSettings);
-builder.Services.AddSingleton<ISmtpRelay, SmtpRelay>();
-
-builder.Services.AddSingleton<IMailQueue>(new TicketOrderMailQueue());
+const string AMQP = "host=localhost";
+var bus = RabbitHutch.CreateBus(AMQP, options => options.EnableSystemTextJson());
+builder.Services.AddSingleton(bus);
+builder.Services.AddSingleton<IMailQueue, EasyNetTicketOrderMailQueue>();
 
 var app = builder.Build();
 

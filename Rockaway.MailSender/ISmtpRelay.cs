@@ -1,6 +1,6 @@
 using MimeKit;
 
-namespace Rockaway.WebApp.Services.Mail;
+namespace Rockaway.MailSender;
 
 public interface ISmtpRelay {
 	Task<string> SendMailAsync(MimeMessage message);

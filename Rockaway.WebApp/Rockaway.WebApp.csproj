@@ -9,6 +9,8 @@
 
 	<ItemGroup>
 	  <PackageReference Include="AspNetCore.SassCompiler" Version="1.99.0" />
+	  <PackageReference Include="EasyNetQ" Version="7.8.0" />
+	  <PackageReference Include="EasyNetQ.Serialization.SystemTextJson" Version="7.8.0" />
 	  <PackageReference Include="MailKit" Version="4.16.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Components" Version="10.0.6" />
 	  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.6" />
@@ -21,6 +23,7 @@
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
 	  <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 	  <PackageReference Include="NodaTime" Version="3.3.1" />
 	</ItemGroup>
 
@@ -30,6 +33,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Rockaway.Messages\Rockaway.Messages.csproj" />
 	  <ProjectReference Include="..\Rockaway.RazorComponents\Rockaway.RazorComponents.csproj" />
 	</ItemGroup>
 

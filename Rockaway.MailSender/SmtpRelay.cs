@@ -1,7 +1,8 @@
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Logging;
 using MimeKit;
 
-namespace Rockaway.WebApp.Services.Mail;
+namespace Rockaway.MailSender;
 
 public class SmtpRelay(SmtpSettings settings, ILogger<SmtpRelay> logger) : ISmtpRelay {
 	public async Task<string> SendMailAsync(MimeMessage mail) {
