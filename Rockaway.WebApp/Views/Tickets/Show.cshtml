@@ -1,3 +1,5 @@
+@using Rockaway.RazorComponents
+@using Rockaway.RazorComponents.Components
 @using Rockaway.WebApp.Components
 @model Rockaway.WebApp.Models.ShowViewData
 <h1>@Model.HeadlineArtistName</h1>
@@ -8,8 +10,10 @@
 <form method="post">
 
 	@(await Html.RenderComponentAsync<TicketPicker>(RenderMode.ServerPrerendered, new {
-		TicketTypes = Model.TicketTypes,
-		CultureName = Model.CultureName
+		TicketTypes = Model.TicketTypes.Select(tt => new TicketPickerItem {
+			Id = tt.Id, Name = tt.Name, Price = tt.Price
+		}).ToList(),
+		Model.CultureName
 	}))
 	<section class="row">
 		<div class="col-12 col-md-8 offset-md-2 text-end">
