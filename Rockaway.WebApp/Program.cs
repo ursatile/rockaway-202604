@@ -1,11 +1,10 @@
 using System.Net;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using Rockaway.WebApp.Data;
 using Rockaway.WebApp.Hosting;
 using Rockaway.WebApp.Services;
+using Rockaway.WebApp.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +41,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>()
 	.AddEntityFrameworkStores<RockawayDbContext>();
 
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+
+builder.Services.AddRazorComponents()
+	.AddInteractiveServerComponents();
 
 var app = builder.Build();
 
@@ -95,6 +97,9 @@ app.MapGet("/hello", () => TypedResults.Content("""
                                                 """,
 	contentType: "text/html",
 	statusCode: (int?) HttpStatusCode.OK));
+
+app.MapRazorComponents<TicketPicker>()
+	.AddInteractiveServerRenderMode();
 
 app.Run();
 return;
