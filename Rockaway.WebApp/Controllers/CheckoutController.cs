@@ -6,7 +6,7 @@ using Rockaway.WebApp.Services.Mail;
 namespace Rockaway.WebApp.Controllers;
 
 public class CheckoutController(RockawayDbContext db, IClock clock,
-	IMailSender mailSender) : Controller {
+	IMailQueue mailQueue) : Controller {
 
 	private async Task<TicketOrder?> FindOrderAsync(Guid id) {
 		return await db.TicketOrders
@@ -30,7 +30,7 @@ public class CheckoutController(RockawayDbContext db, IClock clock,
 		ticketOrder.CompletedAt = clock.GetCurrentInstant();
 		await db.SaveChangesAsync();
 		var ticketOrderMailData = new TicketOrderMailData(ticketOrder, new Uri("https://rockaway.dev"));
-		await mailSender.SendOrderConfirmationAsync(ticketOrderMailData);
+		await mailQueue.AddMailToQueueAsync(ticketOrderMailData);
 		return Content($"""
 		                Order confirmed!
 

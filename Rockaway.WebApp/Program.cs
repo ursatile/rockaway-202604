@@ -7,6 +7,7 @@ using Rockaway.WebApp.Hosting;
 using Rockaway.WebApp.Services;
 using Rockaway.WebApp.Services.Mail;
 using System.Net;
+using Microsoft.Build.Experimental;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +49,7 @@ builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents()
 	.AddInteractiveWebAssemblyComponents();
 
+builder.Services.AddHostedService<TicketMailerBackgroundService>();
 
 // Add this to Program.cs
 
@@ -56,6 +58,8 @@ var smtpSettings = new SmtpSettings();
 builder.Configuration.Bind("Smtp", smtpSettings);
 builder.Services.AddSingleton(smtpSettings);
 builder.Services.AddSingleton<ISmtpRelay, SmtpRelay>();
+
+builder.Services.AddSingleton<IMailQueue>(new TicketOrderMailQueue());
 
 var app = builder.Build();
 
