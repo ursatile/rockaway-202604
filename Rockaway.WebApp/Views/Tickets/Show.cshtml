@@ -6,10 +6,8 @@
 <p>@Model.VenueName, @Model.VenueAddress</p>
 <p>@Model.ShowDate</p>
 
-
 <form method="post">
-
-	@(await Html.RenderComponentAsync<TicketPicker>(RenderMode.ServerPrerendered, new {
+	@(await Html.RenderComponentAsync<TicketPicker>(RenderMode.WebAssemblyPrerendered, new {
 		TicketTypes = Model.TicketTypes.Select(tt => new TicketPickerItem {
 			Id = tt.Id, Name = tt.Name, Price = tt.Price
 		}).ToList(),
@@ -17,7 +15,7 @@
 	}))
 	<section class="row">
 		<div class="col-12 col-md-8 offset-md-2 text-end">
-			<input type="submit" class="btn btn-primary" value="Next &gt;" />
+			<input type="submit" class="btn btn-primary" value="Next &gt;"/>
 		</div>
 	</section>
 </form>

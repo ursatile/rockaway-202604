@@ -9,6 +9,8 @@
 
 	<ItemGroup>
 	  <PackageReference Include="AspNetCore.SassCompiler" Version="1.99.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components" Version="10.0.6" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.6" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.6" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.6" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.6" />

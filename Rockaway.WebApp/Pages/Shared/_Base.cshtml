@@ -13,6 +13,8 @@
 	<base href="~/" />
 	<link rel="stylesheet" href="~/Rockaway.WebApp.styles.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/Rockaway.RazorComponents.styles.css" asp-append-version="true" />
+	<component type="typeof(Microsoft.AspNetCore.Components.Web.HeadOutlet)"
+	           render-mode="ServerPrerendered" />
 </head>
 <body>
 	@RenderBody()

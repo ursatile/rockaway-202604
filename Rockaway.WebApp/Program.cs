@@ -44,7 +44,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>()
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
 builder.Services.AddRazorComponents()
-	.AddInteractiveServerComponents();
+	.AddInteractiveServerComponents()
+	.AddInteractiveWebAssemblyComponents();
+;
 
 var app = builder.Build();
 
@@ -100,7 +102,8 @@ app.MapGet("/hello", () => TypedResults.Content("""
 	statusCode: (int?) HttpStatusCode.OK));
 
 app.MapRazorComponents<TicketPicker>()
-	.AddInteractiveServerRenderMode();
+	.AddInteractiveServerRenderMode()
+	.AddInteractiveWebAssemblyRenderMode();
 
 app.Run();
 return;
