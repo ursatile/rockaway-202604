@@ -1,11 +1,12 @@
-using System.Net;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 using Rockaway.RazorComponents.Components;
+using Rockaway.WebApp.Components;
 using Rockaway.WebApp.Data;
 using Rockaway.WebApp.Hosting;
 using Rockaway.WebApp.Services;
-using Rockaway.WebApp.Components;
+using Rockaway.WebApp.Services.Mail;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,7 +47,15 @@ builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true
 builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents()
 	.AddInteractiveWebAssemblyComponents();
-;
+
+
+// Add this to Program.cs
+
+builder.Services.AddSingleton<IMailSender, SmtpMailSender>();
+var smtpSettings = new SmtpSettings();
+builder.Configuration.Bind("Smtp", smtpSettings);
+builder.Services.AddSingleton(smtpSettings);
+builder.Services.AddSingleton<ISmtpRelay, SmtpRelay>();
 
 var app = builder.Build();
 

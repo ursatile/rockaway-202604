@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 	  <PackageReference Include="AspNetCore.SassCompiler" Version="1.99.0" />
+	  <PackageReference Include="MailKit" Version="4.16.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Components" Version="10.0.6" />
 	  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.6" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.6" />
@@ -26,6 +27,7 @@
 	<ItemGroup>
 	  <Folder Include="Areas\Admin\Data\" />
 	  <Folder Include="Areas\Admin\Models\" />
+	  <Folder Include="NewFolder\" />
 	</ItemGroup>
 
 	<ItemGroup>
